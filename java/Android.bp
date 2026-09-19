@@ -31,7 +31,15 @@ license {
     ],
 }
 
-android_app {
+soong_config_module_type {
+    name: "lineage_cuttlefish_latinime_app",
+    module_type: "android_app",
+    config_namespace: "lineage_cuttlefish",
+    bool_variables: ["disable_latinime_google_jni"],
+    properties: ["required"],
+}
+
+lineage_cuttlefish_latinime_app {
     name: "LatinIME",
 
     srcs: ["src/**/*.java"],
@@ -68,9 +76,14 @@ android_app {
         baseline_filename: "lint-baseline.xml",
     },
 
-    required: [
-        "libjni_latinimegoogle",
-    ],
+    soong_config_variables: {
+        disable_latinime_google_jni: {
+            // The Google/swype JNI prebuilt is available only for arm32/arm64.
+            conditions_default: {
+                required: ["libjni_latinimegoogle"],
+            },
+        },
+    },
 }
 
 cc_prebuilt_library_shared {
