@@ -39,6 +39,14 @@ soong_config_module_type {
     properties: ["required"],
 }
 
+soong_config_module_type {
+    name: "lineage_cuttlefish_latinime_google_jni",
+    module_type: "cc_prebuilt_library_shared",
+    config_namespace: "lineage_cuttlefish",
+    bool_variables: ["disable_latinime_google_jni"],
+    properties: ["enabled"],
+}
+
 lineage_cuttlefish_latinime_app {
     name: "LatinIME",
 
@@ -86,7 +94,7 @@ lineage_cuttlefish_latinime_app {
     },
 }
 
-cc_prebuilt_library_shared {
+lineage_cuttlefish_latinime_google_jni {
     name: "libjni_latinimegoogle",
     strip: {
         none: true,
@@ -103,4 +111,11 @@ cc_prebuilt_library_shared {
     compile_multilib: "both",
     prefer: true,
     check_elf_files: false,
+
+    soong_config_variables: {
+        disable_latinime_google_jni: {
+            // MindTheGapps provides the same module name for Spacewar.
+            enabled: false,
+        },
+    },
 }
